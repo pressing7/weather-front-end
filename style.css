@@ -1,0 +1,340 @@
+/*색상 및 기본 폰트 설정*/
+:root {
+    --bg-color: #1a1a1a;
+    --panel-bg: #222;
+    --text-color: #e0e0e0;
+    --accent: #ffb000;
+    --crt-green: #33ff00;
+    --digital-red: #ff3333;
+}
+
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+
+body {
+    background: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'VT323', monospace;
+    display: flex; justify-content: center;
+    min-height: 100vh; padding: 20px;
+    transition: background-color 1s ease; 
+}
+
+.container { width: 100%; max-width: 650px; }
+
+
+
+header { text-align: center; margin-bottom: 20px; }
+h1 { color: var(--accent); margin-bottom: 15px; font-size: 2.5rem; text-shadow: 2px 2px #000; }
+
+
+/* 날짜 패널과 시간 패널 띄우기용 */
+.clock-wrapper {
+    display: flex; justify-content: center; align-items: center;
+    gap: 15px; margin-bottom: 20px;
+}
+
+
+/* 날짜 */
+.digital-date {
+    font-family: 'Orbitron', sans-serif; font-size: 1.5rem; color: var(--accent);
+    background: #000; padding: 0 15px; border: 2px solid #444; border-radius: 6px;
+    letter-spacing: 2px; height: 60px; display: flex; align-items: center;
+    box-shadow: 0 0 5px rgba(255, 176, 0, 0.3);
+}
+
+
+/* 시간 */
+.digital-clock {
+    font-family: 'Orbitron', sans-serif; font-size: 2.5rem; color: var(--digital-red);
+    background: #000; padding: 0 20px; border: 4px solid #444; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    text-shadow: 0 0 10px var(--digital-red); letter-spacing: 3px;
+    font-variant-numeric: tabular-nums; 
+    width: 260px; height: 60px;
+}
+
+
+/* 검색창 */
+.search-box {
+    display: flex; gap: 5px; margin-bottom: 25px;
+    background: #222; padding: 5px; border: 1px solid #444;
+}
+input {
+    flex: 1; background: transparent; border: none; color: #fff; font-size: 1.5rem;
+    font-family: inherit; outline: none; padding-left: 10px; text-transform: uppercase;
+}
+button {
+    background: #444; color: #fff; border: none; padding: 0 15px;
+    font-family: inherit; cursor: pointer; font-size: 1.2rem;
+}
+button:hover { background: var(--accent); color: #000; }
+
+
+/* 최근 검색어 */
+.recent-search-container {
+    display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap;
+}
+.recent-btn {
+    background: #333; color: #888; border: 1px solid #444;
+    padding: 5px 10px; border-radius: 4px; cursor: pointer;
+    font-family: 'VT323', monospace; font-size: 1rem; text-transform: uppercase;
+    transition: all 0.2s;
+}
+.recent-btn:hover {
+    background: var(--accent); color: #000; border-color: var(--accent);
+}
+
+
+/* 메인 날씨 패널 */
+.status-panel {
+    display: flex; flex-direction: column; gap: 12px; margin-bottom: 30px;
+    background: #222; padding: 20px; border-radius: 10px; border: 2px solid #333;
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+}
+.status-row { display: flex; align-items: center; justify-content: space-between; height: 50px; }
+.flap-wrapper { display: flex; align-items: center; gap: 10px; flex: 1; justify-content: flex-end;}
+
+/* 라벨 스타일 */
+.fixed-label { font-size: 1.4rem; color: #888; width: 100px; flex-shrink: 0; text-align: left; }
+.fixed-label.small { width: 70px; font-size: 1.2rem; }
+.split-row { gap: 20px; }
+.half-row { display: flex; align-items: center; flex: 1; }
+
+/* 날씨 아이콘용 */
+.mini-crt-icon {
+    width: 40px; height: 40px; background: #000; border: 1px solid #444;
+    display: flex; justify-content: center; align-items: center;
+    border-radius: 4px; overflow: hidden;
+}
+.mini-crt-icon img { width: 30px; filter: grayscale(100%) brightness(1.2); }
+
+
+/* 플랩식 안내판 */
+.flap-container { display: flex; gap: 2px; perspective: 1000px; }
+
+
+/* 개별 글자 박스 */
+.flap-char {
+    position: relative; width: 26px; height: 44px; font-size: 38px; line-height: 44px;
+    font-weight: bold; color: var(--text-color); text-align: center;
+    border-radius: 3px; background-color: #111;
+}
+
+
+/* 카드 공통 스타일 */
+.card {
+    position: absolute; left: 0; width: 100%; height: 100%;
+    background-color: #2b2b2b; border-radius: 3px; overflow: hidden;
+    backface-visibility: hidden; -webkit-backface-visibility: hidden; 
+}
+
+/* 상단 카드 */
+.top { clip-path: polygon(0 0, 100% 0, 100% 50%, 0 50%); z-index: 1; }
+/* 하단 카드 */
+.bottom { clip-path: polygon(0 50%, 100% 50%, 100% 100%, 0 100%); z-index: 0; }
+
+
+/* 실제로 회전하는 카드 */
+.flap-leaf {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    transform-style: preserve-3d; z-index: 2; transform-origin: center;
+}
+.flap-leaf .front {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background-color: #2b2b2b; color: var(--text-color);
+    clip-path: polygon(0 0, 100% 0, 100% 50%, 0 50%); backface-visibility: hidden;
+}
+.flap-leaf .back {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background-color: #2b2b2b; color: var(--text-color);
+    clip-path: polygon(0 50%, 100% 50%, 100% 100%, 0 100%);
+    transform: rotateX(180deg); backface-visibility: hidden;
+}
+
+/* 중앙선 */
+.flap-char::after {
+    content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 1px;
+    background: rgba(0,0,0,0.8); z-index: 5;
+}
+
+/* 회전 애니메이션 */
+.flipping { animation: flipDown 0.15s ease-in-out forwards; }
+@keyframes flipDown { 0% { transform: rotateX(0deg); } 100% { transform: rotateX(-180deg); } }
+
+
+/* 옷차림 추천 패널 */
+.advice-panel {
+    background: #0d0d0d;
+    border: 1px solid #444;
+    border-radius: 4px;
+    padding: 10px;
+    margin-bottom: 30px;
+    position: relative;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.7);
+    
+    background-image: 
+        linear-gradient(45deg, #151515 25%, transparent 25%, transparent 75%, #151515 75%, #151515),
+        linear-gradient(45deg, #151515 25%, transparent 25%, transparent 75%, #151515 75%, #151515);
+    background-size: 10px 10px;
+    background-position: 0 0, 5px 5px;
+}
+
+/* 옷차림 추천 */
+.advice-display-container {
+    background: #000;
+    border: 1px inset #333;
+    padding: 10px;
+    height: 70px;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden; position: relative;
+}
+
+/* 도트 픽셀 느낌 */
+.advice-display-container::after {
+    content: " ";
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(rgba(20, 20, 20, 0.8) 20%, transparent 20%) 0 0;
+    background-size: 3px 3px; 
+    pointer-events: none;
+    z-index: 10;
+}
+
+/* 실제 LED 텍스트 */
+.led-text {
+    font-family: 'VT323', monospace;
+    font-size: 2.2rem;
+    color: #ff3333;
+    
+    /* 네온 빛 번짐 효과 */
+    text-shadow: 
+        0 0 2px #ff0000, 
+        0 0 5px #ff0000, 
+        0 0 10px #ff0000,
+        0 0 20px #990000; 
+        
+    white-space: nowrap;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    font-weight: normal;
+    animation: textFlicker 0.05s infinite alternate;
+}
+
+
+/* 장식용 나사 */
+.plate-screws { display: flex; justify-content: space-between; color: #333; font-family: sans-serif; font-size: 1rem; padding: 0 5px; }
+.plate-screws.bottom { margin-top: 5px; }
+
+@keyframes textFlicker { 0% { opacity: 0.92; } 100% { opacity: 1; } }
+
+
+
+/* 5일 예보 */
+.forecast-section h3 { color: var(--crt-green); border-bottom: 1px solid var(--crt-green); display: inline-block; margin-bottom: 15px; }
+.forecast-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(70px, 1fr)); gap: 10px; }
+
+.crt-monitor {
+    background: #051a05; border: 1px solid #1a1a1a; padding: 8px;
+    color: var(--crt-green); text-align: center; position: relative;
+    animation: flicker 0.15s infinite;
+}
+
+/* CRT모니터 효과 */
+.crt-monitor::before {
+    content: " "; display: block; position: absolute; top: 0; left: 0; bottom: 0; right: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%); z-index: 2; background-size: 100% 2px; pointer-events: none;
+}
+.crt-monitor img { width: 30px; filter: sepia(100%) hue-rotate(50deg) saturate(500%); }
+
+
+/* 애니메이션 */
+@keyframes flicker { 0% { opacity: 0.95; } 50% { opacity: 1; } 100% { opacity: 0.96; } }
+@keyframes turnOn { 0% { transform: scale(1, 0.01); opacity: 0; } 100% { transform: scale(1, 1); opacity: 1; } }
+.animate-crt { animation: turnOn 0.4s ease-out forwards; }
+
+
+/* 기타 에러 */
+.hidden { display: none; }
+.error { color: #ff3333; margin-top: 10px; text-align: center; }
+
+
+/* 반응형 미디어 쿼리 */
+@media (max-width: 768px) {
+
+    /* 전체 컨테이너 여백 축소 */
+    body { padding: 10px; }
+    .container { width: 100%; }
+
+    /* 날짜와 시계를 세로로 배치 */
+    .clock-wrapper {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    /* 시계 크기 모바일 최적화 */
+    .digital-clock {
+        font-size: 2rem;
+        width: 220px; 
+        height: 50px;
+    }
+    .digital-date {
+        font-size: 1.2rem;
+        height: 50px;
+    }
+
+    /* 검색창 버튼 크기 조정 */
+    input { font-size: 1.2rem; }
+    button { padding: 0 10px; font-size: 1rem; }
+
+
+    /* 상태 패널: 라벨과 플랩을 위아래로 배치 */
+    .status-row {
+        flex-direction: column; 
+        align-items: flex-start;
+        height: auto;
+        margin-bottom: 15px;
+    }
+
+    /* 라벨위치 조정 */
+    .fixed-label {
+        width: 100%;
+        margin-bottom: 5px;
+        font-size: 1.2rem;
+        color: var(--accent);
+    }
+
+    /* 플랩 컨테이너 정렬 및 크기 축소 */
+    .flap-container {
+        width: 100%;
+        justify-content: flex-start;
+        transform: scale(0.9);
+        transform-origin: left top;
+        margin-bottom: -5px;
+    }
+
+
+    /* 습도/풍속 세로 배치 */
+    .split-row {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+    }
+    .half-row {
+        width: 100%;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    /* 옷차림 패널 글자 크기 축소 */
+    .led-text {
+        font-size: 1.5rem;
+        white-space: normal;
+        text-align: center;
+        line-height: 1.2;
+    }
+    .advice-display-container {
+        height: auto;
+        min-height: 70px;
+    }
+}

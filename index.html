@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Front-end 개발 기말 과제</title>
+
+    <!-- 스타일 및 폰트 -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=VT323&display=swap" rel="stylesheet">
+</head>
+
+
+<body>
+    <div class="container">
+        <header>
+            <h1>WEATHER</h1>
+
+            <!-- 날짜, 시간 -->
+            <div class="clock-wrapper">
+                 <div id="dateDisplay" class="digital-date">--/-- ---</div>
+                 <div id="digitalClock" class="digital-clock">00:00:00</div>
+             </div>
+
+        </header>
+
+        <!-- 검색창 -->
+        <div class="search-box">
+            <input type="text" id="cityInput" placeholder="CITY NAME (EX: SEOUL)">
+            <button id="searchBtn">SEARCH</button>
+            <button id="toggleUnit" class="unit-btn">°C/°F</button>
+        </div>
+        
+        <!-- 최근 검색어 -->
+        <div id="recentSearch" class="recent-search-container">
+        </div>
+
+
+        <!-- 메인 날씨 패널 -->
+        <main id="weatherSection" class="hidden">
+
+
+            <div class="status-panel">
+                <div class="status-row">
+                    <!-- 장소 -->
+                    <span class="fixed-label">LOCATION</span>
+                    <div id="flap-city" class="flap-container" data-length="12"></div>
+                </div>
+
+
+                <div class="status-row">
+                    <!-- 온도 -->
+                    <span class="fixed-label">TEMP</span>
+                    <div id="flap-temp" class="flap-container" data-length="6"></div>
+                </div>
+
+
+                <div class="status-row">
+                    <!-- 날씨 -->
+                    <span class="fixed-label">CONDITION</span>
+                    <div class="flap-wrapper">
+                        <div id="flap-cond" class="flap-container" data-length="12"></div>
+                        <div class="mini-crt-icon">
+                            <img id="weatherIcon" src="" alt="">
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="status-row split-row">
+                    <div class="half-row">
+                        <!-- 습도 -->
+                        <span class="fixed-label small">HUMIDITY</span>
+                        <div id="flap-humid" class="flap-container" data-length="5"></div>
+                    </div>
+                    <div class="half-row">
+                        <span class="fixed-label small">WIND</span>
+                        <div id="flap-wind" class="flap-container" data-length="6"></div>
+                    </div>
+                </div>
+
+
+            </div>
+
+
+            <!-- 옷차림 추천 -->
+            <div class="advice-panel">
+                <div class="plate-screws">
+                    <span>+</span><span>+</span>
+                </div>
+                
+
+                <div class="advice-display-container">
+                    <div id="adviceDisplay" class="led-text">WAITING...</div>
+                </div>
+                
+
+                <div class="plate-screws bottom">
+                    <span>+</span><span>+</span>
+                </div>
+
+
+            </div>
+
+
+            <!-- 5일 예보 -->
+            <div class="forecast-section">
+                <h3>FORECAST</h3>
+                <div id="forecastGrid" class="forecast-grid"></div>
+            </div>
+
+
+        </main>
+
+       <!-- 에러메시지 --> 
+        <div id="errorMessage" class="error hidden"></div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
